@@ -226,6 +226,8 @@ class ReferralProgram extends Module
 
 	public function getContent()
 	{
+		$this->_html = '';
+
 		if (Tools::isSubmit('submitReferralProgram'))
 		{
 			$this->_postValidation();
