@@ -33,7 +33,7 @@ class ReferralProgram extends Module
 	{
 		$this->name = 'referralprogram';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.5.6';
+		$this->version = '1.5.7';
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -402,6 +402,8 @@ class ReferralProgram extends Module
 		include_once(dirname(__FILE__).'/ReferralProgramModule.php');
 
 		$customer = new Customer((int)$params['id_customer']);
+		$sponsor = null;
+
 		if (!Validate::isLoadedObject($customer))
 			die ($this->l('Incorrect Customer object.'));
 
@@ -412,45 +414,25 @@ class ReferralProgram extends Module
 			$sponsor = new Customer((int)$referralprogram->id_sponsor);
 		}
 
-		$html = '
-		<div class="clear">&nbsp;</div>
-		<h2>'.$this->l('Referral program').' ('.count($friends).')</h2>
-		<h3>'.(isset($sponsor) ? $this->l('Customer\'s sponsor:').' <a href="index.php?tab=AdminCustomers&id_customer='.(int)$sponsor->id.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id).'">'.$sponsor->firstname.' '.$sponsor->lastname.'</a>' : $this->l('No one has sponsored this customer.')).'</h3>';
-
-		if ($friends AND sizeof($friends))
+		foreach ($friends AS $key => &$friend)
 		{
-			$html.= '<h3>'.sizeof($friends).' '.(sizeof($friends) > 1 ? $this->l('Sponsored customers:') : $this->l('Sponsored customer:')).'</h3>';
-			$html.= '
-			<table cellspacing="0" cellpadding="0" class="table">
-				<tr>
-					<th class="center">'.$this->l('ID').'</th>
-					<th class="center">'.$this->l('Name').'</th>
-					<th class="center">'.$this->l('Email').'</th>
-					<th class="center">'.$this->l('Registration date').'</th>
-					<th class="center">'.$this->l('Customers sponsored by this friend').'</th>
-					<th class="center">'.$this->l('Placed orders').'</th>
-					<th class="center">'.$this->l('Customer account created').'</th>
-				</tr>';
-				foreach ($friends AS $key => $friend)
-				{
-					$orders = Order::getCustomerOrders($friend['id_customer']);
-					$html.= '
-					<tr '.($key++ % 2 ? 'class="alt_row"' : '').' '.((int)($friend['id_customer']) ? 'style="cursor: pointer" onclick="document.location = \'?tab=AdminCustomers&id_customer='.$friend['id_customer'].'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id).'\'"' : '').'>
-						<td class="center">'.((int)($friend['id_customer']) ? $friend['id_customer'] : '--').'</td>
-						<td>'.$friend['firstname'].' '.$friend['lastname'].'</td>
-						<td>'.$friend['email'].'</td>
-						<td>'.Tools::displayDate($friend['date_add'],null , true).'</td>
-						<td align="right">'.sizeof(ReferralProgramModule::getSponsorFriend($friend['id_customer'])).'</td>
-						<td align="right">'.($orders ? sizeof($orders) : 0).'</td>
-						<td align="center">'.((int)$friend['id_customer'] ? '<img src="'._PS_ADMIN_IMG_.'enabled.gif" />' : '<img src="'._PS_ADMIN_IMG_.'disabled.gif" />').'</td>
-					</tr>';
-				}
-			$html.= '
-				</table>';
+			$friend['orders_count'] = sizeof(Order::getCustomerOrders($friend['id_customer']));
+			$friend['date_add'] = Tools::displayDate($friend['date_add'],null , true);
+			$friend['sponsored_friend_count'] = sizeof(ReferralProgramModule::getSponsorFriend($friend['id_customer']));
 		}
+
+		$this->smarty->assign(array(
+			'friends' => $friends,
+			'sponsor' => $sponsor,
+			'customer' => $customer,
+			'admin_image_dir' => _PS_ADMIN_IMG_,
+			'token' => Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id)
+		));
+
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
+			return $this->display(__FILE__, 'hook_customers_16.tpl');
 		else
-			$html.= sprintf($this->l('%1$s %2$s has not sponsored any friends yet.'), $customer->firstname, $customer->lastname);
-		return $html.'<br/><br/>';
+			return $this->display(__FILE__, 'hook_customers.tpl');
 	}
 
 	/**
