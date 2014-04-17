@@ -33,7 +33,7 @@ class ReferralProgram extends Module
 	{
 		$this->name = 'referralprogram';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.5.7';
+		$this->version = '1.5.8';
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -42,7 +42,6 @@ class ReferralProgram extends Module
 		$this->confirmUninstall = $this->l('All sponsors and friends will be deleted. Are you sure you want to uninstall this module?');
 		$this->displayName = $this->l('Customer referral program');
 		$this->description = $this->l('Integrate a referral program system into your shop.');
-		$this->ps_versions_compliancy = array('min' => '1.5.6.1', 'max' => _PS_VERSION_);
 		if (Configuration::get('REFERRAL_DISCOUNT_TYPE') == 1 AND !Configuration::get('REFERRAL_PERCENTAGE'))
 			$this->warning = $this->l('Please specify an amount for referral program vouchers.');
 
