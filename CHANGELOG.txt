@@ -1,0 +1,6 @@
+2014-04-17 11:33:46 +0200	Bug fix (PS 1.5): ps_version_compliancy removed
+2014-04-10 16:12:33 +0200	Merge branch 'master' into dev
+2014-04-10 16:10:59 +0200	[-] MO : ReferralProgram - FixBug #PSCSX-1700
+2014-04-09 10:14:23 +0200	// Small fix
+2014-03-24 18:26:44 +0100	/ MO referralprogram : ps_versions_compliancy added
+2014-03-21 10:55:21 +0100	Initial commit
