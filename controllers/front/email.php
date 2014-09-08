@@ -48,7 +48,12 @@ class ReferralprogramEmailModuleFrontController extends ModuleFrontController
 		if (!preg_match("#.*\.html$#Ui", Tools::getValue('mail')) OR !preg_match("#.*\.html$#Ui", Tools::getValue('mail')))
 			die(Tools::redirect());
 			
-		$file = file_get_contents(dirname(__FILE__).'/../../mails/'.strval(preg_replace('#\.{2,}#', '.', Tools::getValue('mail'))));
+		$file_path = dirname(__FILE__).'/../../mails/'.strval(preg_replace('#\.{2,}#', '.', Tools::getValue('mail')));
+		
+		if (!file_exists($file_path))
+			Tools::redirect('index.php');
+		
+		$file = file_get_contents($file_path);
 		
 		$file = str_replace('{shop_name}', $shop_name, $file);
 		$file = str_replace('{shop_url}', $shop_url.__PS_BASE_URI__, $file);

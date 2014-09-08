@@ -33,7 +33,7 @@ class ReferralProgram extends Module
 	{
 		$this->name = 'referralprogram';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.5.8';
+		$this->version = '1.5.9';
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -263,11 +263,11 @@ class ReferralProgram extends Module
 		if (!Validate::isLoadedObject($cartRule))
 			return false;
 
-		//if ($cartRule->checkValidity($this->context) === false)
-		//{
+		if ($cartRule->checkValidity($this->context, false, false) === true)
+		{
 			$this->smarty->assign(array('discount_display' => ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, new Currency($params['cookie']->id_currency)), 'discount' => $cartRule));
 			return $this->display(__FILE__, 'shopping-cart.tpl');
-	//	}
+		}
 		return false;
 	}
 
