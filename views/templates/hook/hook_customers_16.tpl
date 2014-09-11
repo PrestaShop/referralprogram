@@ -29,8 +29,8 @@
 				<td>{if $friend.id_customer}{$friend.id_customer}{else}--{/if}</td>
 				<td>{$friend.firstname} {$friend.lastname}</td>
 				<td>{$friend.email}</td>
-				<td>{$friend.sponsored_friend_count|intval}</td>
 				<td>{$friend.date_add}</td>
+				<td>{$friend.sponsored_friend_count|intval}</td>
 				<td>{$friend.orders_count|intval}</td>
 				<td>{if $friend.id_customer}<i class="icon-check list-action-enable action-enabled"></i>{else}<i class="icon-remove list-action-enable action-disabled"></i>{/if}</td>
 			</tr>
