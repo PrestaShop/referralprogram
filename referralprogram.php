@@ -37,7 +37,7 @@ class ReferralProgram extends Module
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
-		parent::__construct();	
+		parent::__construct();
 
 		$this->confirmUninstall = $this->l('All sponsors and friends will be deleted. Are you sure you want to uninstall this module?');
 		$this->displayName = $this->l('Customer referral program');
@@ -144,7 +144,7 @@ class ReferralProgram extends Module
 		}
 		return ''; // return a string because it's a display method
 	}
-	
+
 	private function _postProcess()
 	{
 		Configuration::updateValue('REFERRAL_ORDER_QUANTITY', (int)(Tools::getValue('order_quantity')));
@@ -155,7 +155,7 @@ class ReferralProgram extends Module
 		Configuration::updateValue('REFERRAL_PERCENTAGE', (int)(Tools::getValue('discount_value_percentage')));
 		foreach (Language::getLanguages(false) as $lang)
 			Configuration::updateValue('REFERRAL_DISCOUNT_DESCRIPTION', array($lang['id_lang'] => Tools::getValue('discount_description_'.(int)$lang['id_lang'])));
-		
+
 		$this->_html .= $this->displayConfirmation($this->l('Configuration updated.'));
 	}
 
@@ -175,7 +175,7 @@ class ReferralProgram extends Module
 			$this->_errors[] = $this->displayError($this->l('Discount type is required/invalid.'));
 		if (!(int)(Tools::getValue('nb_friends')) OR Tools::getValue('nb_friends') < 0)
 			$this->_errors[] = $this->displayError($this->l('Number of friends is required/invalid.'));
-		if ((int)(Tools::getValue('discount_type'))===1)	
+		if ((int)(Tools::getValue('discount_type')) === 1)
 			if (!(int)(Tools::getValue('discount_value_percentage')) OR (int)(Tools::getValue('discount_value_percentage')) < 0 OR (int)(Tools::getValue('discount_value_percentage')) > 100)
 				$this->_errors[] = $this->displayError($this->l('Discount percentage is required/invalid.'));
 	}
@@ -194,7 +194,7 @@ class ReferralProgram extends Module
 			if ($line = $this->putContent($newXml, 'body_paragraph_'.(int)$lang['id_lang'], Tools::getValue('body_paragraph_'.(int)$lang['id_lang']), $forbiddenKey, 'body'))
 				$newXml .= $line;
 		}
-		
+
 		$newXml .= "\n\t".'</body>'."\n";
 		$newXml .= '</referralprogram>'."\n";
 
@@ -496,7 +496,7 @@ class ReferralProgram extends Module
 		}
 		return false;
 	}
-	
+
 	public function renderForm()
 	{
 
@@ -558,7 +558,7 @@ class ReferralProgram extends Module
 					)
 			),
 		);
-		
+
 		$fields_form_2 = array(
 			'form' => array(
 				'legend' => array(
@@ -581,7 +581,7 @@ class ReferralProgram extends Module
 				)
 			),
 		);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
@@ -599,32 +599,32 @@ class ReferralProgram extends Module
 			'languages' => $this->context->controller->getLanguages(),
 			'id_language' => $this->context->language->id
 		);
-		
+
 		$helper->override_folder = '/';
-		
+
 		return $this->renderJs().$helper->generateForm(array($fields_form_1, $fields_form_2));
 	}
-	
+
 	public function getConfigFieldsValues()
-	{	
+	{
 		$fields_values = array(
 			'order_quantity' => Tools::getValue('order_quantity', Configuration::get('REFERRAL_ORDER_QUANTITY')),
 			'discount_type' => Tools::getValue('discount_type', Configuration::get('REFERRAL_DISCOUNT_TYPE')),
 			'nb_friends' => Tools::getValue('nb_friends', Configuration::get('REFERRAL_NB_FRIENDS')),
 			'discount_value_percentage' => Tools::getValue('discount_value_percentage', Configuration::get('REFERRAL_PERCENTAGE')),
 		);
-	
+
 		$languages = Language::getLanguages(false);
 		foreach ($languages as $lang)
 		{
 			$fields_values['discount_description'][$lang['id_lang']] = Tools::getValue('discount_description_'.(int)$lang['id_lang'], Configuration::get('REFERRAL_DISCOUNT_DESCRIPTION', (int)$lang['id_lang']));
 			$fields_values['body_paragraph'][$lang['id_lang']] = '';
 		}
-		
+
 		$currencies = Currency::getCurrencies();
 		foreach ($currencies as $currency)
 			$fields_values['discount_value'][$currency['id_currency']] = Tools::getValue('discount_value['.(int)$currency['id_currency'].']', Configuration::get('REFERRAL_DISCOUNT_VALUE_'.(int)$currency['id_currency']));
-		
+
 		// xml loading
 		$xml = false;
 		if (file_exists($this->_xmlFile))
@@ -634,10 +634,10 @@ class ReferralProgram extends Module
 					$key = 'paragraph_'.$lang['id_lang'];
 					$fields_values['body_paragraph'][$lang['id_lang']] = Tools::getValue('body_paragraph_'.(int)$lang['id_lang'] ,(string)$xml->body->$key);
 				}
-	
+
 		return $fields_values;
 	}
-	
+
 	public function renderJs()
 	{
 		return "
@@ -646,7 +646,7 @@ class ReferralProgram extends Module
 				toggleVoucherType()
 				$('input[name=discount_type]').click(function () {toggleVoucherType()});
 			});
-			
+
 			function toggleVoucherType()
 			{
 				if ($('input[name=discount_type]:checked').val() == 2)
