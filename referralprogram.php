@@ -175,8 +175,9 @@ class ReferralProgram extends Module
 			$this->_errors[] = $this->displayError($this->l('Discount type is required/invalid.'));
 		if (!(int)(Tools::getValue('nb_friends')) OR Tools::getValue('nb_friends') < 0)
 			$this->_errors[] = $this->displayError($this->l('Number of friends is required/invalid.'));
-		if (!(int)(Tools::getValue('discount_value_percentage')) OR (int)(Tools::getValue('discount_value_percentage')) < 0 OR (int)(Tools::getValue('discount_value_percentage')) > 100)
-			$this->_errors[] = $this->displayError($this->l('Discount percentage is required/invalid.'));
+		if ((int)(Tools::getValue('discount_type'))===1)	
+			if (!(int)(Tools::getValue('discount_value_percentage')) OR (int)(Tools::getValue('discount_value_percentage')) < 0 OR (int)(Tools::getValue('discount_value_percentage')) > 100)
+				$this->_errors[] = $this->displayError($this->l('Discount percentage is required/invalid.'));
 	}
 
 	private function _writeXml()
