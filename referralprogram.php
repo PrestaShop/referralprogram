@@ -73,6 +73,9 @@ class ReferralProgram extends Module
 		foreach (Currency::getCurrencies() AS $currency)
 			Configuration::updateValue('REFERRAL_DISCOUNT_VALUE_'.(int)($currency['id_currency']), 5);
 
+		/* Define a default value for the amount tax */
+		Configuration::updateValue('REFERRAL_TAX', 1);
+
 		/* Define a default value for the percentage vouchers */
 		Configuration::updateValue('REFERRAL_PERCENTAGE', 5);
 
@@ -109,7 +112,8 @@ class ReferralProgram extends Module
 		if (!parent::uninstall() OR !$this->uninstallDB() OR !$this->removeMail() OR !$result
 		OR !Configuration::deleteByName('REFERRAL_PERCENTAGE') OR !Configuration::deleteByName('REFERRAL_ORDER_QUANTITY')
 		OR !Configuration::deleteByName('REFERRAL_DISCOUNT_TYPE') OR !Configuration::deleteByName('REFERRAL_NB_FRIENDS')
-		OR !Configuration::deleteByName('REFERRAL_DISCOUNT_DESCRIPTION'))
+		OR !Configuration::deleteByName('REFERRAL_DISCOUNT_DESCRIPTION')
+		OR !Configuration::deleteByName('REFERRAL_TAX'))
 			return false;
 		return true;
 	}
@@ -150,6 +154,7 @@ class ReferralProgram extends Module
 		Configuration::updateValue('REFERRAL_ORDER_QUANTITY', (int)(Tools::getValue('order_quantity')));
 		foreach (Tools::getValue('discount_value') AS $id_currency => $discount_value)
 			Configuration::updateValue('REFERRAL_DISCOUNT_VALUE_'.(int)($id_currency), (float)($discount_value));
+		Configuration::updateValue('REFERRAL_TAX', (int)(Tools::getValue('discount_tax')));
 		Configuration::updateValue('REFERRAL_DISCOUNT_TYPE', (int)(Tools::getValue('discount_type')));
 		Configuration::updateValue('REFERRAL_NB_FRIENDS', (int)(Tools::getValue('nb_friends')));
 		Configuration::updateValue('REFERRAL_PERCENTAGE', (int)(Tools::getValue('discount_value_percentage')));
@@ -545,6 +550,19 @@ class ReferralProgram extends Module
 						'name' => 'discount_value',
 					),
 					array(
+						'type' => 'select',
+						'label' => 	$this->l('Voucher tax'),
+						'name' => 'discount_tax',
+						'options' => array(
+							'query' => array(
+								array('id' => 0, 'name' => $this->l('Tax excluded')),
+								array('id' => 1, 'name' => $this->l('Tax included'))
+								),
+							'id' => 'id',
+							'name' => 'name',
+						),
+					),
+					array(
 						'type' => 'text',
 						'label' => $this->l('Voucher description'),
 						'name' => 'discount_description',
@@ -612,6 +630,7 @@ class ReferralProgram extends Module
 			'discount_type' => Tools::getValue('discount_type', Configuration::get('REFERRAL_DISCOUNT_TYPE')),
 			'nb_friends' => Tools::getValue('nb_friends', Configuration::get('REFERRAL_NB_FRIENDS')),
 			'discount_value_percentage' => Tools::getValue('discount_value_percentage', Configuration::get('REFERRAL_PERCENTAGE')),
+			'discount_tax' => Tools::getValue('discount_tax', Configuration::get('REFERRAL_TAX')),
 		);
 
 		$languages = Language::getLanguages(false);
