@@ -179,7 +179,7 @@
 		{else}
 			<p class="warning">
 				{if $subscribeFriends AND $subscribeFriends|@count > 0}
-					{l s='You have no pending invitation.' mod='referralprogram'}
+					{l s='You have no pending invitations.' mod='referralprogram'}
 				{else}
 					{l s='You have not sponsored any friends yet.' mod='referralprogram'}
 				{/if}
