@@ -177,7 +177,13 @@
 			</p>
 		</form>
 		{else}
-			<p class="warning">{l s='You have not sponsored any friends.' mod='referralprogram'}</p>
+			<p class="warning">
+				{if $subscribeFriends AND $subscribeFriends|@count > 0}
+					{l s='You have no pending invitation.' mod='referralprogram'}
+				{else}
+					{l s='You have not sponsored any friends yet.' mod='referralprogram'}
+				{/if}
+			</p>
 		{/if}
 	</div>
 
