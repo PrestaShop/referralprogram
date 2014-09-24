@@ -53,7 +53,7 @@ class ReferralProgram extends Module
 		}
 	}
 
-	public function install()
+	public function install($delete_params = true)
 	{
 		$defaultTranslations = array('en' => 'Referral reward', 'fr' => 'Récompense parrainage');
 		$desc = array((int)Configuration::get('PS_LANG_DEFAULT') => $this->l('Referral reward'));
@@ -61,12 +61,15 @@ class ReferralProgram extends Module
 			if (isset($defaultTranslations[$language['iso_code']]))
 				$desc[(int)$language['id_lang']] = $defaultTranslations[$language['iso_code']];
 
-		if (!parent::install() OR !$this->installDB() OR !Configuration::updateValue('REFERRAL_DISCOUNT_DESCRIPTION', $desc)
+		if (!parent::install() OR !Configuration::updateValue('REFERRAL_DISCOUNT_DESCRIPTION', $desc)
 			OR !Configuration::updateValue('REFERRAL_ORDER_QUANTITY', 1) OR !Configuration::updateValue('REFERRAL_DISCOUNT_TYPE', 2)
 			OR !Configuration::updateValue('REFERRAL_NB_FRIENDS', 5) OR !$this->registerHook('shoppingCart')
 			OR !$this->registerHook('orderConfirmation') OR !$this->registerHook('updateOrderStatus')
 			OR !$this->registerHook('adminCustomers') OR !$this->registerHook('createAccount')
 			OR !$this->registerHook('createAccountForm') OR !$this->registerHook('customerAccount'))
+			return false;
+
+		if ($delete_params && !$this->installDB())
 			return false;
 
 		/* Define a default value for fixed amount vouchers, for each currency */
@@ -104,12 +107,16 @@ class ReferralProgram extends Module
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
 	}
 
-	public function uninstall()
+	public function uninstall($delete_params = true)
 	{
 		$result = true;
 		foreach (Currency::getCurrencies() AS $currency)
 			$result = $result AND Configuration::deleteByName('REFERRAL_DISCOUNT_VALUE_'.(int)($currency['id_currency']));
-		if (!parent::uninstall() OR !$this->uninstallDB() OR !$this->removeMail() OR !$result
+
+		if ($delete_params && !$this->uninstallDB())
+			return false;
+
+		if (!parent::uninstall() OR !$this->removeMail() OR !$result
 		OR !Configuration::deleteByName('REFERRAL_PERCENTAGE') OR !Configuration::deleteByName('REFERRAL_ORDER_QUANTITY')
 		OR !Configuration::deleteByName('REFERRAL_DISCOUNT_TYPE') OR !Configuration::deleteByName('REFERRAL_NB_FRIENDS')
 		OR !Configuration::deleteByName('REFERRAL_DISCOUNT_DESCRIPTION')
@@ -134,6 +141,16 @@ class ReferralProgram extends Module
 					if (file_exists($file) AND !@unlink($file))
 						$this->_errors[] = $this->l('Cannot delete this file:').' '.$file;
 				}
+		return true;
+	}
+
+	public function reset()
+	{
+		if (!$this->uninstall(false))
+			return false;
+		if (!$this->install(false))
+			return false;
+
 		return true;
 	}
 
