@@ -148,7 +148,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 			{
 				foreach ($friendsChecked as $key => $friendChecked)
 				{
-					if (ReferralProgramModule::isSponsorFriend((int)($this->context->customer->id), (int)($friendChecked)))
+					if (ReferralProgramModule::isSponsorFriend((int)($this->context->customer->id), (int)($key)))
 					{
 					if (Configuration::get('PS_CIPHER_ALGORITHM'))
 						$cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
