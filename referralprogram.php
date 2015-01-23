@@ -36,6 +36,8 @@ class ReferralProgram extends Module
 		$this->version = '1.6.2';
 		$this->author = 'PrestaShop';
 
+		$this->controllers = array('program');
+
 		$this->bootstrap = true;
 		parent::__construct();
 
