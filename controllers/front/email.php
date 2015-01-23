@@ -30,11 +30,11 @@
 class ReferralprogramEmailModuleFrontController extends ModuleFrontController
 {
 	public $content_only = true;
-	
+
 	public $display_header = false;
-	
+
 	public $display_footer = false;
-	
+
 	/**
 	 * @see FrontController::initContent()
 	 */
@@ -44,17 +44,17 @@ class ReferralprogramEmailModuleFrontController extends ModuleFrontController
 		$shop_name = htmlentities(Configuration::get('PS_SHOP_NAME'), NULL, 'utf-8');
 		$shop_url = Tools::getHttpHost(true, true);
 		$customer = Context::getContext()->customer;
-		
+
 		if (!preg_match("#.*\.html$#Ui", Tools::getValue('mail')) OR !preg_match("#.*\.html$#Ui", Tools::getValue('mail')))
-			die(Tools::redirect());
-			
+			die(Tools::redirect('index.php'));
+
 		$file_path = dirname(__FILE__).'/../../mails/'.strval(preg_replace('#\.{2,}#', '.', Tools::getValue('mail')));
-		
+
 		if (!file_exists($file_path))
 			Tools::redirect('index.php');
-		
+
 		$file = file_get_contents($file_path);
-		
+
 		$file = str_replace('{shop_name}', $shop_name, $file);
 		$file = str_replace('{shop_url}', $shop_url.__PS_BASE_URI__, $file);
 		$file = str_replace('{shop_logo}', $shop_url._PS_IMG_.'logo.jpg', $file);
@@ -69,9 +69,9 @@ class ReferralprogramEmailModuleFrontController extends ModuleFrontController
 			$file = str_replace('{discount}', Discount::display((float)(Configuration::get('REFERRAL_PERCENTAGE')), $discount_type, new Currency($this->context->currency->id)), $file);
 		else
 			$file = str_replace('{discount}', Discount::display((float)(Configuration::get('REFERRAL_DISCOUNT_VALUE_' . $this->context->currency->id)), $discount_type, new Currency($this->context->currency->id)), $file);
-		
+
 		$this->context->smarty->assign(array('content' => $file));
-		
+
 		$this->setTemplate('email.tpl');
 	}
 }
