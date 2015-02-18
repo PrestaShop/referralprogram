@@ -36,7 +36,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 	public function init()
 	{
 		if (!$this->context->customer->isLogged())
-			Tools::redirect('index.php?controller=authentication&back=modules/referralprogram/referralprogram-program.php');
+			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, 'back='.urlencode( Context::getContext()->link->getModuleLink('referralprogram', 'program') )));
 		parent::init();
 	}
 
