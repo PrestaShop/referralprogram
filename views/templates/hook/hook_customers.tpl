@@ -33,7 +33,7 @@
 		{l s='No one has sponsored this customer.' mod='referralprogram'}
 	{/if}
 </h3>
-<h3>{count($friends)|intval} {if count($friends) > 1}{l s='Sponsored customers: mod='referralprogram''}{else}{l s='Sponsored customer:' mod='referralprogram'}{/if}</h3>
+<h3>{count($friends)|intval} {if count($friends) > 1}{l s='Sponsored customers:' mod='referralprogram''}{else}{l s='Sponsored customer:' mod='referralprogram'}{/if}</h3>
 <table cellspacing="0" cellpadding="0" class="table">
 	<tr>
 		<th class="center">{l s='ID' mod='referralprogram'}</th>
