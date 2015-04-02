@@ -545,9 +545,10 @@ class ReferralProgram extends Module
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Vouchers cumulative'),
+						'label' => $this->l('Combine vouchers'),
 						'name' => 'discount_cumulative',
-						'desc' => $this->l('Are the cart rules cumulative between them ?'),
+						'desc' => $this->l('If enabled, a customer can use several vouchers for a same order.'),
+						'hint' => $this->l('A customer can have several active vouchers. Do you allow these vouchers to be combined on a single purchase?'),
 						'values' => array(
 							array(
 								'id' => 'active_on',
