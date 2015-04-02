@@ -65,7 +65,7 @@ class ReferralProgram extends Module
 
 		if (!parent::install() OR !Configuration::updateValue('REFERRAL_DISCOUNT_DESCRIPTION', $desc)
 			OR !Configuration::updateValue('REFERRAL_ORDER_QUANTITY', 1) OR !Configuration::updateValue('REFERRAL_DISCOUNT_TYPE', 2)
-			OR !Configuration::updateValue('REFERRAL_NB_FRIENDS', 5) OR !$this->registerHook('shoppingCart')
+			OR !Configuration::updateValue('REFERRAL_NB_FRIENDS', 5) OR !Configuration::updateValue('REFERRAL_DISCOUNT_CUMULATIVE', 1) OR !$this->registerHook('shoppingCart')
 			OR !$this->registerHook('orderConfirmation') OR !$this->registerHook('updateOrderStatus')
 			OR !$this->registerHook('adminCustomers') OR !$this->registerHook('createAccount')
 			OR !$this->registerHook('createAccountForm') OR !$this->registerHook('customerAccount'))
@@ -122,6 +122,7 @@ class ReferralProgram extends Module
 		OR !Configuration::deleteByName('REFERRAL_PERCENTAGE') OR !Configuration::deleteByName('REFERRAL_ORDER_QUANTITY')
 		OR !Configuration::deleteByName('REFERRAL_DISCOUNT_TYPE') OR !Configuration::deleteByName('REFERRAL_NB_FRIENDS')
 		OR !Configuration::deleteByName('REFERRAL_DISCOUNT_DESCRIPTION')
+		OR !Configuration::deleteByName('REFERRAL_DISCOUNT_CUMULATIVE')
 		OR !Configuration::deleteByName('REFERRAL_TAX'))
 			return false;
 		return true;
@@ -177,6 +178,7 @@ class ReferralProgram extends Module
 		Configuration::updateValue('REFERRAL_DISCOUNT_TYPE', (int)(Tools::getValue('discount_type')));
 		Configuration::updateValue('REFERRAL_NB_FRIENDS', (int)(Tools::getValue('nb_friends')));
 		Configuration::updateValue('REFERRAL_PERCENTAGE', (int)(Tools::getValue('discount_value_percentage')));
+		Configuration::updateValue('REFERRAL_DISCOUNT_CUMULATIVE', (int)(Tools::getValue('discount_cumulative')));
 		foreach (Language::getLanguages(false) as $lang)
 			Configuration::updateValue('REFERRAL_DISCOUNT_DESCRIPTION', array($lang['id_lang'] => Tools::getValue('discount_description_'.(int)$lang['id_lang'])));
 
@@ -542,6 +544,24 @@ class ReferralProgram extends Module
 						'name' => 'nb_friends',
 					),
 					array(
+						'type' => 'switch',
+						'label' => $this->l('Vouchers cumulative'),
+						'name' => 'discount_cumulative',
+						'desc' => $this->l('Are the cart rules cumulative between them ?'),
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Yes')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('No')
+							)
+						)
+					),
+					array(
 						'type' => 'radio',
 						'label' => $this->l('Voucher type :'),
 						'name' => 'discount_type',
@@ -650,6 +670,7 @@ class ReferralProgram extends Module
 			'nb_friends' => Tools::getValue('nb_friends', Configuration::get('REFERRAL_NB_FRIENDS')),
 			'discount_value_percentage' => Tools::getValue('discount_value_percentage', Configuration::get('REFERRAL_PERCENTAGE')),
 			'discount_tax' => Tools::getValue('discount_tax', Configuration::get('REFERRAL_TAX')),
+			'discount_cumulative' => Tools::getValue('discount_cumulative', Configuration::get('REFERRAL_DISCOUNT_CUMULATIVE')),
 		);
 
 		$languages = Language::getLanguages(false);
