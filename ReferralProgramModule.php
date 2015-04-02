@@ -79,7 +79,7 @@ class ReferralProgramModule extends ObjectModel
 
 	public function registerDiscount($id_customer, $register = false, $id_currency = 0)
 	{
-		$configurations = Configuration::getMultiple(array('REFERRAL_DISCOUNT_TYPE', 'REFERRAL_PERCENTAGE', 'REFERRAL_DISCOUNT_VALUE_'.(int)$id_currency, 'REFERRAL_TAX'));
+		$configurations = Configuration::getMultiple(array('REFERRAL_DISCOUNT_TYPE', 'REFERRAL_PERCENTAGE', 'REFERRAL_DISCOUNT_CUMULATIVE', 'REFERRAL_DISCOUNT_VALUE_'.(int)$id_currency, 'REFERRAL_TAX'));
 
 		$cartRule = new CartRule();		
 		if ($configurations['REFERRAL_DISCOUNT_TYPE'] == Discount::PERCENT)
@@ -90,6 +90,7 @@ class ReferralProgramModule extends ObjectModel
 			$cartRule->reduction_tax = (int)$configurations['REFERRAL_TAX'];
 		}
 		
+		$cartRule->cart_rule_restriction = !(int)$configurations['REFERRAL_DISCOUNT_CUMULATIVE'];
 		$cartRule->quantity = 1;
 		$cartRule->quantity_per_user = 1;
 		$cartRule->date_from = date('Y-m-d H:i:s', time());
