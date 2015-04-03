@@ -50,8 +50,8 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 	}
 
 	/**
-	* @see FrontController::initContent()
-	*/
+	 * @see FrontController::initContent()
+	 */
 	public function initContent()
 	{
 		parent::initContent();
