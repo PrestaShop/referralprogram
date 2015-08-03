@@ -30,11 +30,12 @@
 class ReferralprogramRulesModuleFrontController extends ModuleFrontController
 {
 	public $content_only = true;
-	
+
 	public $display_header = false;
-	
+
 	public $display_footer = false;
-	
+
+	public $ssl = true;
 	/**
 	 * @see FrontController::initContent()
 	 */

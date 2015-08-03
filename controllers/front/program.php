@@ -32,6 +32,7 @@ include_once(dirname(__FILE__).'../../../referralprogram.php');
 
 class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 {
+	public $ssl = true;
 
 	public function init()
 	{
