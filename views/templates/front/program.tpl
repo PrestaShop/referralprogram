@@ -227,5 +227,5 @@
 		<a href="{$link->getPageLink('my-account', true)|escape:'html'}" title="{l s='Back to Your Account' mod='referralprogram'}" rel="nofollow">
 		<img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /> {l s='Back to Your Account' mod='referralprogram'}</a>
 	</li>
-	<li class="f_right"><a href="{$base_dir}" title="{l s='Home' mod='referralprogram'}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /> {l s='Home' mod='referralprogram'}</a></li>
+	<li class="f_right"><a href="{$content_dir}" title="{l s='Home' mod='referralprogram'}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /> {l s='Home' mod='referralprogram'}</a></li>
 </ul>
