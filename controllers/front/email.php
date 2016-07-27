@@ -34,6 +34,8 @@ class ReferralprogramEmailModuleFrontController extends ModuleFrontController
 	public $display_header = false;
 
 	public $display_footer = false;
+	
+	public $ssl = true;
 
 	/**
 	 * @see FrontController::initContent()
