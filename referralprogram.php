@@ -365,29 +365,21 @@ class ReferralProgram extends Module
 		{
 			include_once(dirname(__FILE__).'/ReferralProgramModule.php');
 
-			/* If the customer was not invited by the sponsor, we create the invitation dynamically */
-			if (!$id_referralprogram = ReferralProgramModule::isEmailExists($newCustomer->email, true, false))
-			{
-				$referralprogram = new ReferralProgramModule();
-				$referralprogram->id_sponsor = (int)$sponsor->id;
-				$referralprogram->firstname = $newCustomer->firstname;
-				$referralprogram->lastname = $newCustomer->lastname;
-				$referralprogram->email = $newCustomer->email;
-				if (!$referralprogram->validateFields(false))
-					return false;
-				else
-					$referralprogram->save();
-			}
-			else
-				$referralprogram = new ReferralProgramModule((int)$id_referralprogram);
+            /* If the customer was not invited by the sponsor,we ignore the invitation block*/
+            $idReferralProgram = ReferralProgramModule::isInvitedBy($postVars['email'], $sponsor->id);
+            if (!$idReferralProgram) {
+                return false;
+            } else {
+                $referralProgram = new ReferralProgramModule((int)$idReferralProgram);
+            }
 
-			if ($referralprogram->id_sponsor == $sponsor->id)
+            if ($referralProgram->id_sponsor == $sponsor->id)
 			{
-				$referralprogram->id_customer = (int)$newCustomer->id;
-				$referralprogram->save();
-				if ($referralprogram->registerDiscountForSponsored((int)$params['cookie']->id_currency))
+                $referralProgram->id_customer = (int)$newCustomer->id;
+                $referralProgram->save();
+				if ($referralProgram->registerDiscountForSponsored((int)$params['cookie']->id_currency))
 				{
-					$cartRule = new CartRule((int)$referralprogram->id_cart_rule);
+					$cartRule = new CartRule((int)$referralProgram->id_cart_rule);
 					if (Validate::isLoadedObject($cartRule))
 					{
 						$data = array(

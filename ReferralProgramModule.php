@@ -193,4 +193,23 @@ class ReferralProgramModule extends ObjectModel
 			return (int)$result['id_referralprogram'];
 		return isset($result['id_referralprogram']);
 	}
+
+    /**
+     * Return if a customer is Invited By sponsor
+     *
+     * @return boolean
+     */
+    public static function isInvitedBy($mailCustomer, $idSponser)
+    {
+        $result = Db::getInstance()->getRow('
+		SELECT s.`id_referralprogram`
+		FROM `' . _DB_PREFIX_ . 'referralprogram` s
+		WHERE s.`email` = \'' . pSQL($mailCustomer) . '\' 
+		and  s.`id_customer`  = 0  
+		and s.`id_sponsor` = ' . $idSponser);
+        if (isset($result['id_referralprogram'])) {
+            return (int)$result['id_referralprogram'];
+        }
+        return isset($result['id_referralprogram']);
+    }
 }
