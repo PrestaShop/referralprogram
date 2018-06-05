@@ -2,7 +2,7 @@
   "name": "prestashop/referralprogram",
   "description": "PrestaShop module referralprogram",
   "homepage": "https://github.com/PrestaShop/referralprogram",
-  "license": "AFL - Academic Free License (AFL 3.0)",
+  "license": "AFL-3.0",
   "authors": [
     {
       "name": "PrestaShop SA",
